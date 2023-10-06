@@ -1,0 +1,68 @@
+<template>
+    <header>
+        <h2>HIS在线服务系统</h2>
+        <div class="context">
+            <img src="../../assets//images/avatar.jpg" alt="">
+            <span v-if="isAdmin" title="记得完善个人信息">13525164584</span>
+            <span v-else>jieye</span>
+        </div>
+        <div class="clear"></div>
+    </header>
+    <!-- <div class="bg">
+        <img src="../../assets/images/navbottom.png" alt="" style="width:100%;height:245px;">
+    </div> -->
+    <div class="main">
+        <router-view></router-view>
+    </div>
+    <footer>
+
+    </footer>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+const isAdmin = ref(true)
+</script>
+
+<style lang="scss" scoped>
+header {
+    width: 100%;
+    height: $nav_height;
+    line-height: $nav_height;
+    box-sizing: border-box;
+    padding: 0 100px;
+    background-color: #000000;
+    color: #ffffff;
+
+    h2 {
+        float: left;
+        width: 200px;
+        height: 100%;
+        font-size: 20px;
+        font-style: italic;
+        letter-spacing: 0.1em;
+    }
+
+    .context {
+        float: right;
+        width: 200px;
+        height: 70px;
+        line-height: 0;
+
+        img {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 10px;
+            vertical-align: middle;
+        }
+
+        span {
+            display: inline-block;
+            width: 100px;
+            height: 70px;
+        }
+    }
+}
+</style>

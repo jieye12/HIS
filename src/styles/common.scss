@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* width: 100%; */
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+li {
+    list-style: none;
+}
+
+.clear {
+    clear: both;
+}
+
+.all {
+    width: 100%;
+    background-color: #e8f3f3;
+    padding: 10px;
+    box-sizing: border-box;
+    min-height: calc(100vh - 70px);
+}
