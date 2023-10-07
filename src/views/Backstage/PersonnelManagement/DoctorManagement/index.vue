@@ -24,11 +24,11 @@
                 <el-table-column prop="job" label="职称" align="center"></el-table-column>
                 <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
                 <el-table-column prop="details" label="详情" align="center"></el-table-column>
-
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
-                        <el-button type="primary" size="small" @click="editDoctor(row)">编辑</el-button>
-                        <el-button type="primary" @click="deleteDoctor(row)">删除</el-button>
+                        <span><el-button type="primary" @click="editDoctor(row)"
+                                style="width:45%;margin-right:5px;">编辑</el-button></span>
+                        <span><el-button type="danger" @click="deleteDoctor(row)" style="width:45%;">删除</el-button></span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -75,11 +75,11 @@ import { ElMessageBox } from 'element-plus';
 
 const doctorList = ref([
     { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    { id: 2, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    { id: 3, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    { id: 4, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    { id: 5, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    // { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
 ]);
 const keyword = ref('')
 const dialogVisible = ref(false);

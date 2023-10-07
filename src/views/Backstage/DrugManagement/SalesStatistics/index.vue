@@ -29,31 +29,31 @@ let charts5 = ref()
 let datas = [
     ////////////////////////////////////////
     [
-        { name: '圣彼得堡来客', value: 5.6 },
-        { name: '陀思妥耶夫斯基全集', value: 1 },
-        { name: '史记精注全译（全6册）', value: 0.8 },
-        { name: '加德纳艺术通史', value: 0.5 },
-        { name: '表象与本质', value: 0.5 },
+        { name: '皮肤科', value: 5.6 },
+        { name: '骨科', value: 1 },
+        { name: '儿科', value: 0.8 },
+        { name: '妇科', value: 0.5 },
+        { name: '外科', value: 0.5 },
         { name: '其它', value: 3.8 }
     ],
     // ////////////////////////////////////////
     [
-        { name: '银河帝国5：迈向基地', value: 3.8 },
-        { name: '俞军产品方法论', value: 2.3 },
-        { name: '艺术的逃难', value: 2.2 },
-        { name: '第一次世界大战回忆录（全五卷）', value: 1.3 },
-        { name: 'Scrum 精髓', value: 1.2 },
-        { name: '其它', value: 5.7 }
+        { name: '1月', value: 3.8 },
+        { name: '2月', value: 2.3 },
+        { name: '3月', value: 2.2 },
+        { name: '4月', value: 1.3 },
+        { name: '5月', value: 1.2 },
+        { name: '6月', value: 5.7 }
     ],
 
     ////////////////////////////////////////
     [
-        { name: '克莱因壶', value: 3.5 },
-        { name: '投资最重要的事', value: 2.8 },
-        { name: '简读中国史', value: 1.7 },
-        { name: '你当像鸟飞往你的山', value: 1.4 },
-        { name: '表象与本质', value: 0.5 },
-        { name: '其它', value: 3.8 }
+        { name: '周一', value: 3.5 },
+        { name: '周二', value: 2.8 },
+        { name: '周三', value: 1.7 },
+        { name: '周四', value: 1.4 },
+        { name: '周五', value: 0.5 },
+        { name: '周末', value: 3.8 }
     ]
 ];
 //组件挂载完毕初始化图形图标
@@ -169,7 +169,7 @@ onMounted(() => {
     };
     let option4 = {
         title: {
-            text: '阅读书籍分布',
+            text: '患者分布',
             left: 'center',
             textStyle: {
                 color: '#999',
@@ -251,19 +251,25 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .container {
-    background: url(../../../../assets/images/bg3.png) no-repeat;
-    background-size: cover;
+    // background: url(../../../../assets/images/bg3.png) no-repeat;
+    // background-size: cover;
 
     .echarts {
         width: 33%;
-        height: 400px;
+        // height: 400px;
+        // height: 350px;
+        // height: 45%;
+        height: 40vh;
         float: left;
     }
 
     .text {
         float: left;
         width: 33%;
-        height: 400px;
+        // height: 45%;
+        // height: 400px;
+        // height: 350px;
+        height: 45vh;
         text-align: center;
         font-size: 50px;
         line-height: 400px;
