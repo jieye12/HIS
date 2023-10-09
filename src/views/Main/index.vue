@@ -1,6 +1,6 @@
 <template>
     <header>
-        <h2>HIS在线服务系统</h2>
+        <h2>医信网系统</h2>
         <div class="context">
             <img src="../../assets//images/avatar.jpg" alt="">
             <span v-if="isAdmin" title="记得完善个人信息">13525164584</span>
@@ -8,9 +8,6 @@
         </div>
         <div class="clear"></div>
     </header>
-    <!-- <div class="bg">
-        <img src="../../assets/images/navbottom.png" alt="" style="width:100%;height:245px;">
-    </div> -->
     <div class="main">
         <router-view></router-view>
     </div>

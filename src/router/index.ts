@@ -3,7 +3,6 @@ import Login from '../views/Login/login.vue'
 import Register from '../views/Register/register.vue'
 import Main from '../views/Main/index.vue'
 import Nav from '../views/Nav/index.vue'
-import Advisory from '../views/MedicalServices/Advisory/index.vue'
 import Reserve from '../views/MedicalServices/Reserve/index.vue'
 import Scheduling from '../views/MedicalServices/Reserve/Scheduling/index.vue'
 import Clinic from '../views/MedicalServices/Clinic/index.vue'
@@ -59,10 +58,6 @@ const router = createRouter({
       children: [{
         path: "",
         component: Nav
-      },
-      {
-        path: "/advisory",
-        component: Advisory
       }, {
         path: "/reserve",
         component: Reserve

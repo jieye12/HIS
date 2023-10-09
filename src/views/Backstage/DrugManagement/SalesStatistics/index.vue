@@ -208,7 +208,7 @@ onMounted(() => {
                     length2: 0,
                     maxSurfaceAngle: 80
                 },
-                labelLayout: function (params) {
+                labelLayout: function (params: any) {
                     const isLeft = params.labelRect.x < mychart1.getWidth() / 2;
                     const points = params.labelLinePoints as number[][];
                     // Update the end point.

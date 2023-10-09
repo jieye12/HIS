@@ -2,7 +2,7 @@
     <div class="container">
         <el-card shadow="always">
             <div class="login_form">
-                <h1>春江医院HIS系统登录</h1>
+                <h1>医信网系统登录</h1>
                 <div class="form">
                     <el-form :model="loginForm" :rules="formRules" ref="form" label-width="100px">
                         <el-form-item label="手机号" prop="phone">
