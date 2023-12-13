@@ -16,14 +16,14 @@
             <el-button type="primary" @click="addSalesRecord" style="margin:10px;">添加销售记录</el-button>
             <el-table :data="salesRecords" border>
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
-                <el-table-column prop="productName" label="药品名称" align="center"></el-table-column>
-                <el-table-column prop="category" label="药品分类" align="center"></el-table-column>
+                <el-table-column prop="name" label="药品名称" align="center"></el-table-column>
+                <el-table-column prop="type" label="药品分类" align="center"></el-table-column>
                 <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-                <el-table-column prop="quantity" label="销售数量" align="center"></el-table-column>
-                <el-table-column prop="price" label="销售价格" align="center"></el-table-column>
-                <el-table-column label="销售时间" prop="timestamp" align="center">
+                <el-table-column prop="saleCount" label="销售数量" align="center"></el-table-column>
+                <el-table-column prop="sellingPrice" label="销售价格" align="center"></el-table-column>
+                <el-table-column label="销售时间" prop="time" align="center">
                     <template #default="{ row }">
-                        {{ formatDate(row.timestamp) }}
+                        {{ row.time }}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -39,23 +39,24 @@
             <!-- 编辑/添加药品销售记录对话框 -->
             <el-dialog v-model="dialogVisible" :title="dialogTitle">
                 <el-form :model="currentSalesRecord" :rules="salesRecordFormRules" ref="formRef" label-width="100px">
-                    <el-form-item label="药品名称" prop="productName">
-                        <el-input v-model="currentSalesRecord.productName" placeholder="请输入药品名称"></el-input>
+                    <el-form-item label="药品名称" prop="name">
+                        <el-input v-model="currentSalesRecord.name" placeholder="请输入药品名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="药品分类" prop="category">
-                        <el-input v-model="currentSalesRecord.category" placeholder="请输入药品分类"></el-input>
+                    <el-form-item label="药品分类" prop="type">
+                        <el-input v-model="currentSalesRecord.type" placeholder="请输入药品分类"></el-input>
                     </el-form-item>
                     <el-form-item label="规格" prop="specification">
                         <el-input v-model="currentSalesRecord.specification" placeholder="请输入药品规格"></el-input>
                     </el-form-item>
-                    <el-form-item label="销售数量" prop="quantity">
-                        <el-input-number v-model="currentSalesRecord.quantity" :min="0" :precision="0"></el-input-number>
+                    <el-form-item label="销售数量" prop="saleCount">
+                        <el-input-number v-model="currentSalesRecord.saleCount" :min="0" :precision="0"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="销售价格" prop="price">
-                        <el-input-number v-model="currentSalesRecord.price" :min="0" :precision="2"></el-input-number>
+                    <el-form-item label="销售价格" prop="sellingPrice">
+                        <el-input-number v-model="currentSalesRecord.sellingPrice" :min="0"
+                            :precision="2"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="销售时间" prop="timestamp">
-                        <el-date-picker v-model="currentSalesRecord.timestamp" type="datetime"></el-date-picker>
+                    <el-form-item label="销售时间" prop="time">
+                        <el-date-picker v-model="currentSalesRecord.time" type="datetime"></el-date-picker>
                     </el-form-item>
                 </el-form>
                 <template #footer class="dialog-footer">
@@ -70,7 +71,12 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { ElTable, ElTableColumn, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElDatePicker } from 'element-plus';
-
+import { reqMedical } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqMedical()
+    console.log(res);
+    salesRecords.value = res.data
+})
 // 数据模拟
 const salesRecords = ref([
     { id: 1, productName: '阿司匹林', category: '非处方药', specification: '100mg*100片', quantity: 10, price: 20.5, timestamp: new Date() },
@@ -79,12 +85,12 @@ const salesRecords = ref([
 
 // 当前编辑的药品销售记录
 const currentSalesRecord = reactive({
-    productName: '',
-    category: '',
+    name: '',
+    type: '',
     specification: '',
-    quantity: 0,
-    price: 0.0,
-    timestamp: new Date(),
+    saleCount: 0,
+    sellingPrice: 0.0,
+    time: new Date(),
 });
 const formRef = ref()
 const pageSize = 10; // 每页显示的记录数
@@ -121,20 +127,20 @@ const addSalesRecord = () => {
     dialogVisible.value = true;
     dialogTitle.value = '新增销售记录';
     Object.assign(currentSalesRecord, {
-        productName: '',
-        category: "",
+        name: '',
+        type: "",
         specification: "",
-        quantity: 0,
-        price: 0,
-        timestamp: new Date()
+        saleCount: 0,
+        sellingPrice: 0,
+        time: new Date()
     })
     nextTick(() => {
-        formRef.value.clearValidate('productName');
-        formRef.value.clearValidate('category');
+        formRef.value.clearValidate('name');
+        formRef.value.clearValidate('type');
         formRef.value.clearValidate('specification');
-        formRef.value.clearValidate('price');
-        formRef.value.clearValidate('quantity');
-        formRef.value.clearValidate('timestamp');
+        formRef.value.clearValidate('sellingPrice');
+        formRef.value.clearValidate('saleCount');
+        formRef.value.clearValidate('time');
     });
 }
 
@@ -144,12 +150,12 @@ const editSalesRecord = (row) => {
     dialogTitle.value = '编辑销售记录';
     Object.assign(currentSalesRecord, row)
     nextTick(() => {
-        formRef.value.clearValidate('productName');
-        formRef.value.clearValidate('category');
+        formRef.value.clearValidate('name');
+        formRef.value.clearValidate('type');
         formRef.value.clearValidate('specification');
-        formRef.value.clearValidate('price');
-        formRef.value.clearValidate('quantity');
-        formRef.value.clearValidate('timestamp');
+        formRef.value.clearValidate('sellingPrice');
+        formRef.value.clearValidate('saleCount');
+        formRef.value.clearValidate('time');
     });
 }
 

@@ -17,13 +17,13 @@
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名" align="center"></el-table-column>
                 <el-table-column prop="age" label="年龄" align="center"></el-table-column>
-                <el-table-column prop="gender" label="性别" align="center"></el-table-column>
-                <el-table-column prop="description" label="病情" align="center"></el-table-column>
-                <el-table-column prop="doctor" label="主治医师" align="center"></el-table-column>
-                <el-table-column prop="date" label="诊断时间" align="center"></el-table-column>
-                <el-table-column prop="state" label="当前状态" align="center"></el-table-column>
-                <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
-                <el-table-column prop="details" label="详情" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="illness" label="病情" align="center"></el-table-column>
+                <el-table-column prop="mainDoctor" label="主治医师" align="center"></el-table-column>
+                <el-table-column prop="diagnosisTime" label="诊断时间" align="center"></el-table-column>
+                <el-table-column prop="status" label="当前状态" align="center"></el-table-column>
+                <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="desc" label="详情" align="center"></el-table-column>
 
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
@@ -43,26 +43,26 @@
                     <el-form-item label="年龄" prop="age">
                         <el-input v-model="form.age" placeholder="请输入年龄"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别" prop="gender">
-                        <el-input v-model="form.gender" placeholder="请输入性别"></el-input>
+                    <el-form-item label="性别" prop="sex">
+                        <el-input v-model="form.sex" placeholder="请输入性别"></el-input>
                     </el-form-item>
-                    <el-form-item label="病情" prop="description">
-                        <el-input v-model="form.description" placeholder="请输入病情"></el-input>
+                    <el-form-item label="病情" prop="illness">
+                        <el-input v-model="form.illness" placeholder="请输入病情"></el-input>
                     </el-form-item>
-                    <el-form-item label="主治医师" prop="doctor">
-                        <el-input v-model="form.doctor" placeholder="请输入主治医师"></el-input>
+                    <el-form-item label="主治医师" prop="mainDoctor">
+                        <el-input v-model="form.mainDoctor" placeholder="请输入主治医师"></el-input>
                     </el-form-item>
-                    <el-form-item label="诊断时间" prop="time">
-                        <el-date-picker v-model="form.date" type="date" placeholder="请选择日期"></el-date-picker>
+                    <el-form-item label="诊断时间" prop="diagnosisTime">
+                        <el-date-picker v-model="form.diagnosisTime" type="date" placeholder="请选择日期"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="状态" prop="state">
-                        <el-input v-model="form.state" placeholder="请输入患者当前状态"></el-input>
+                    <el-form-item label="状态" prop="status">
+                        <el-input v-model="form.status" placeholder="请输入患者当前状态"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系方式" prop="contact">
-                        <el-input v-model="form.contact" placeholder="请输入联系方式"></el-input>
+                    <el-form-item label="联系方式" prop="phone">
+                        <el-input v-model="form.phone" placeholder="请输入联系方式"></el-input>
                     </el-form-item>
-                    <el-form-item label="详情" prop="description">
-                        <el-input v-model="form.details" placeholder="请输入其它信息"></el-input>
+                    <el-form-item label="详情" prop="desc">
+                        <el-input v-model="form.desc" placeholder="请输入其它信息"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -75,9 +75,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick } from 'vue';
+import { ref, reactive, nextTick, onMounted } from 'vue';
 import { ElMessageBox } from 'element-plus';
-
+import { reqGetPatient, reqSearchPatient, reqAddPatient } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqGetPatient()
+    console.log(res);
+    patientList.value = res.data
+})
 const patientList = ref([
     { id: 1, name: "张三", age: 40, gender: "男", description: "右手骨折", doctor: "刘菊", date: "2023-10-01", state: "住院", contact: "13525164584", details: "房间号：5601" },
     { id: 1, name: "张三", age: 40, gender: "男", description: "右手骨折", doctor: "刘菊", date: "2023-10-01", state: "住院", contact: "13525164584", details: "房间号：5601" },
@@ -92,16 +97,17 @@ const formRef = ref()
 const form = reactive({
     name: "",
     age: "",
-    gender: "",
-    description: "",
-    doctor: "",
-    date: "",
-    state: "",
-    contact: "",
-    details: ""
+    sex: "",
+    illness: "",
+    mainDoctor: "",
+    diagnosisTime: "",
+    status: "",
+    phone: "",
+    desc: ""
 });
-const search = () => {
-
+const search = async () => {
+    const res = await reqSearchPatient(keyword.value)
+    console.log(res);
 }
 const pageSize = 10; // 每页显示的记录数
 const total = ref(0); // 总记录数
@@ -144,34 +150,20 @@ function editSchedule(schedule: any) {
     nextTick(() => {
         formRef.value.clearValidate('name');
         formRef.value.clearValidate('age');
-        formRef.value.clearValidate('gender');
-        formRef.value.clearValidate('description');
-        formRef.value.clearValidate('doctor');
-        formRef.value.clearValidate('date');
-        formRef.value.clearValidate('state');
-        formRef.value.clearValidate('contact');
-        formRef.value.clearValidate('details');
+        formRef.value.clearValidate('sex');
+        formRef.value.clearValidate('illness');
+        formRef.value.clearValidate('mainDoctor');
+        formRef.value.clearValidate('diagnosisTime');
+        formRef.value.clearValidate('status');
+        formRef.value.clearValidate('phone');
+        formRef.value.clearValidate('desc');
     });
 }
 
 const saveSchedule = async () => {
     await formRef.value.validate()
-    // if (currentSchedule) {
-    //     // 编辑排班
-    //     currentSchedule.date = form.date;
-    //     currentSchedule.shift = form.shift;
-    //     currentSchedule.doctor = form.doctor;
-    //     currentSchedule.department = form.department;
-    // } else {
-    //     // 新增排班
-    //     const newSchedule = {
-    //         date: form.date,
-    //         shift: form.shift,
-    //         doctor: form.doctor,
-    //         department: form.department
-    //     };
-    //     scheduleList.value.push(newSchedule);
-    // }
+    const res = await reqAddPatient(form)
+    console.log(res);
     dialogVisible.value = false;
 }
 </script>

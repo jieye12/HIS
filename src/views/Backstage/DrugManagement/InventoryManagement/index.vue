@@ -16,10 +16,10 @@
             <el-button type="primary" @click="addDrugStock" style="margin:10px;">添加药品库存</el-button>
             <el-table :data="drugStocks" border>
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
-                <el-table-column prop="productName" label="药品名称" align="center"></el-table-column>
-                <el-table-column prop="category" label="药品分类" align="center"></el-table-column>
+                <el-table-column prop="name" label="药品名称" align="center"></el-table-column>
+                <el-table-column prop="type" label="药品分类" align="center"></el-table-column>
                 <el-table-column prop="specification" label="规格" align="center"></el-table-column>
-                <el-table-column prop="quantity" label="库存数量" align="center"></el-table-column>
+                <el-table-column prop="count" label="库存数量" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
                         <el-button @click="editDrugStock(row)" type="primary" size="small">编辑</el-button>
@@ -34,17 +34,17 @@
             <!-- 编辑/添加药品库存对话框 -->
             <el-dialog v-model="dialogVisible" :title="dialogTitle">
                 <el-form :model="currentDrugStock" :rules="drugStockFormRules" ref="formRef" label-width="100px">
-                    <el-form-item label="药品名称" prop="productName">
-                        <el-input v-model="currentDrugStock.productName" placeholder="请输入药品名称"></el-input>
+                    <el-form-item label="药品名称" prop="name">
+                        <el-input v-model="currentDrugStock.name" placeholder="请输入药品名称"></el-input>
                     </el-form-item>
-                    <el-form-item label="药品分类" prop="category">
-                        <el-input v-model="currentDrugStock.category" placeholder="请输入药品分类"></el-input>
+                    <el-form-item label="药品分类" prop="type">
+                        <el-input v-model="currentDrugStock.type" placeholder="请输入药品分类"></el-input>
                     </el-form-item>
                     <el-form-item label="规格" prop="specification">
                         <el-input v-model="currentDrugStock.specification" placeholder="请输入药品规格"></el-input>
                     </el-form-item>
-                    <el-form-item label="库存数量" prop="quantity">
-                        <el-input-number v-model="currentDrugStock.quantity" :min="0" :precision="0"></el-input-number>
+                    <el-form-item label="库存数量" prop="count">
+                        <el-input-number v-model="currentDrugStock.count" :min="0" :precision="0"></el-input-number>
                     </el-form-item>
                 </el-form>
                 <template #footer class="dialog-footer">
@@ -60,7 +60,12 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { ElTable, ElTableColumn, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber } from 'element-plus';
-
+import { reqMedical } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqMedical()
+    console.log(res);
+    drugStocks.value = res.data
+})
 // 数据模拟
 const drugStocks = ref([
     { id: 1, productName: '阿司匹林', category: '非处方药', specification: '100mg*100片', quantity: 500 },
@@ -76,10 +81,10 @@ const currentPage = ref(1); // 当前页码
 const limit = ref(10)
 // 当前编辑的药品库存
 const currentDrugStock = reactive({
-    productName: '',
-    category: '',
+    name: '',
+    type: '',
     specification: '',
-    quantity: 0,
+    count: 0,
 });
 const formRef = ref()
 // 表单验证规则
@@ -98,15 +103,15 @@ const addDrugStock = () => {
     dialogVisible.value = true;
     dialogTitle.value = '新增药品库存';
     Object.assign(currentDrugStock, {
-        productName: '',
-        category: '',
+        name: '',
+        type: '',
         specification: 0,
-        quantity: ""
+        count: ""
     })
     nextTick(() => {
-        formRef.value.clearValidate('productName');
-        formRef.value.clearValidate('category');
-        formRef.value.clearValidate('quantity');
+        formRef.value.clearValidate('name');
+        formRef.value.clearValidate('type');
+        formRef.value.clearValidate('count');
         formRef.value.clearValidate('specification');
     });
 }
@@ -116,9 +121,9 @@ const editDrugStock = (row) => {
     dialogTitle.value = '编辑库存记录';
     Object.assign(currentDrugStock, row)
     nextTick(() => {
-        formRef.value.clearValidate('productName');
-        formRef.value.clearValidate('category');
-        formRef.value.clearValidate('quantity');
+        formRef.value.clearValidate('name');
+        formRef.value.clearValidate('type');
+        formRef.value.clearValidate('count');
         formRef.value.clearValidate('specification');
     });
 }
@@ -130,21 +135,6 @@ const deleteDrugStock = (row) => {
 // 保存药品库存
 const saveDrugStock = async () => {
     await formRef.value.validate()
-    // const form = refs.drugStockForm;
-    // form.validate((valid) => {
-    //     if (valid) {
-    //         // 保存药品库存
-    //         if (currentDrugStockIndex === -1) {
-    //             drugStocks.value.push(currentDrugStock);
-    //         } else {
-    //             drugStocks.value[currentDrugStockIndex] = currentDrugStock;
-    //         }
-    //         // 关闭对话框
-    //         dialogVisible.value = false;
-    //         // 清空表单数据
-    //         form.resetFields();
-    //     }
-    // });
 }
 </script>
 

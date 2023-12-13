@@ -33,8 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { reqGetResult } from '../../../api/medicalservice/index';
+onMounted(async () => {
+    const res = await reqGetResult(localStorage.getItem("userId"))
+    console.log(res);
+
+})
 const $router = useRouter()
 const date = ref([{
     id: 1,

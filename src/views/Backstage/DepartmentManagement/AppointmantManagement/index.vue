@@ -17,10 +17,10 @@
             <el-button type="primary" @click="addAppointment" style="margin:0 0 20px 10px;">新增预约</el-button>
             <el-table :data="appointmentList" border>
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
-                <el-table-column prop="patientName" label="患者姓名" align="center"></el-table-column>
-                <el-table-column prop="doctorName" label="医生姓名" align="center"></el-table-column>
-                <el-table-column prop="department" label="科室" align="center"></el-table-column>
-                <el-table-column prop="date" label="预约日期" align="center"></el-table-column>
+                <el-table-column prop="realName" label="患者姓名" align="center"></el-table-column>
+                <el-table-column prop="doctorId" label="医生姓名" align="center"></el-table-column>
+                <el-table-column prop="departmentId" label="科室" align="center"></el-table-column>
+                <!-- <el-table-column prop="date" label="预约日期" align="center"></el-table-column> -->
                 <el-table-column prop="time" label="预约时间" align="center"></el-table-column>
             </el-table>
             <el-pagination @size-change="sizeChange" @current-change="getHasTrademark" :pager-count="9"
@@ -29,17 +29,14 @@
 
             <el-dialog title="预约详情" v-model="dialogVisible">
                 <el-form :model="form" label-width="80px" ref="formRef" :rules="rules">
-                    <el-form-item label="患者姓名" prop="patientName">
-                        <el-input v-model="form.patientName" placeholder="请输入患者姓名"></el-input>
+                    <el-form-item label="患者姓名" prop="realName">
+                        <el-input v-model="form.realName" placeholder="请输入患者姓名"></el-input>
                     </el-form-item>
-                    <el-form-item label="医生姓名" prop="doctorName">
-                        <el-input v-model="form.doctorName" placeholder="请输入医生姓名"></el-input>
+                    <el-form-item label="医生姓名" prop="doctorId">
+                        <el-input v-model="form.doctorId" placeholder="请输入医生姓名"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室" prop="department">
-                        <el-input v-model="form.department" placeholder="请输入科室名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="预约日期" prop="date">
-                        <el-date-picker v-model="form.date" type="date" placeholder="请选择预约日期"></el-date-picker>
+                    <el-form-item label="科室" prop="departmentId">
+                        <el-input v-model="form.departmentId" placeholder="请输入科室名称"></el-input>
                     </el-form-item>
                     <el-form-item label="预约时间" prop="time">
                         <el-time-picker v-model="form.time" placeholder="请选择预约时间"></el-time-picker>
@@ -55,7 +52,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick, watch } from 'vue';
+import { ref, reactive, nextTick, watch, onMounted } from 'vue';
+import { reqGetAppointment } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqGetAppointment()
+    console.log(res);
+    appointmentList.value = res.data
+})
 const c1Arr = ["内科", "外科", "儿科"]
 const c2 = []
 const c3 = []
@@ -71,10 +74,9 @@ const scene = ref(0);
 const dialogVisible = ref(false);
 const formRef = ref()
 const form = reactive({
-    patientName: '',
-    doctorName: '',
-    department: '',
-    date: null,
+    realName: '',
+    doctorId: '',
+    departmentId: '',
     time: null
 });
 const rules = {
@@ -103,17 +105,15 @@ const addAppointment = () => {
     dialogVisible.value = true;
     currentAppointment = null;
     Object.assign(form, {
-        patientName: '',
-        doctorName: '',
-        department: '',
-        date: '',
+        realName: '',
+        doctorId: '',
+        departmentId: '',
         time: ''
     })
     nextTick(() => {
-        formRef.value.clearValidate('patientName');
-        formRef.value.clearValidate('doctorName');
-        formRef.value.clearValidate('department');
-        formRef.value.clearValidate('date');
+        formRef.value.clearValidate('realName');
+        formRef.value.clearValidate('doctorId');
+        formRef.value.clearValidate('departmentId');
         formRef.value.clearValidate('time');
     });
 }
@@ -123,18 +123,16 @@ const saveAppointment = async () => {
     await formRef.value.validate()
     if (currentAppointment) {
         // 编辑预约
-        currentAppointment.patientName = form.patientName;
-        currentAppointment.doctorName = form.doctorName;
-        currentAppointment.department = form.department;
-        currentAppointment.date = form.date;
+        currentAppointment.patientName = form.realName;
+        currentAppointment.doctorName = form.doctorId;
+        currentAppointment.department = form.departmentId;
         currentAppointment.time = form.time;
     } else {
         // 新增预约
         const newAppointment = {
-            patientName: form.patientName,
-            doctorName: form.doctorName,
-            department: form.department,
-            date: form.date,
+            patientName: form.realName,
+            doctorName: form.doctorId,
+            department: form.departmentId,
             time: form.time
         };
         appointmentList.value.push(newAppointment);

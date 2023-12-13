@@ -1,4 +1,4 @@
-<style lang="scss" scoped></style>
+<!-- <style lang="scss" scoped></style> -->
 <template>
     <div>
         <el-card style="height: 80px;margin-bottom:20px;">
@@ -8,7 +8,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" size="default" :disabled="keyword ? false : true"
-                        @click="search">搜索</el-button>
+                        @click="search()">搜索</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -19,11 +19,11 @@
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名" align="center"></el-table-column>
                 <el-table-column prop="age" label="年龄" align="center"></el-table-column>
-                <el-table-column prop="gender" label="性别" align="center"></el-table-column>
-                <el-table-column prop="department" label="科室" align="center"></el-table-column>
-                <el-table-column prop="job" label="职称" align="center"></el-table-column>
-                <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
-                <el-table-column prop="details" label="详情" align="center"></el-table-column>
+                <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+                <el-table-column prop="departmentId" label="科室" align="center"></el-table-column>
+                <el-table-column prop="jobTitle" label="职称" align="center"></el-table-column>
+                <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+                <el-table-column prop="desc" label="详情" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
                         <span><el-button type="primary" @click="editDoctor(row)"
@@ -44,20 +44,20 @@
                     <el-form-item label="年龄" prop="age">
                         <el-input v-model="form.age" placeholder="请输入年龄"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别" prop="gender">
-                        <el-input v-model="form.gender" placeholder="请输入性别"></el-input>
+                    <el-form-item label="性别" prop="sex">
+                        <el-input v-model="form.sex" placeholder="请输入性别"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室" prop="department">
-                        <el-input v-model="form.department" placeholder="请输入科室"></el-input>
+                    <el-form-item label="科室" prop="departmentId">
+                        <el-input v-model="form.departmentId" placeholder="请输入科室"></el-input>
                     </el-form-item>
-                    <el-form-item label="职称" prop="job">
-                        <el-input v-model="form.job" placeholder="请输入职称"></el-input>
+                    <el-form-item label="职称" prop="jobTitle">
+                        <el-input v-model="form.jobTitle" placeholder="请输入职称"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系方式" prop="contact">
-                        <el-input v-model="form.contact" placeholder="请输入联系方式"></el-input>
+                    <el-form-item label="联系方式" prop="phone">
+                        <el-input v-model="form.phone" placeholder="请输入联系方式"></el-input>
                     </el-form-item>
-                    <el-form-item label="详情" prop="details">
-                        <el-input v-model="form.details" placeholder="请输入其它信息"></el-input>
+                    <el-form-item label="详情" prop="desc">
+                        <el-input v-model="form.desc" placeholder="请输入其它信息"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -70,16 +70,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick } from 'vue';
+import { ref, reactive, nextTick, onMounted } from 'vue';
 import { ElMessageBox } from 'element-plus';
-
+import { reqGetDoctor, reqSearchDoctor, reqAddDoctor } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqGetDoctor()
+    console.log(res);
+    doctorList.value = res.data
+})
 const doctorList = ref([
-    { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
+    { id: 1, name: "张三", age: 40, sex: "男", departmentId: "儿科", phone: "13525164584", details: "暂无", job: "主任" },
     { id: 2, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
     { id: 3, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
     { id: 4, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
     { id: 5, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
-    // { id: 1, name: "张三", age: 40, gender: "男", department: "儿科", contact: "13525164584", details: "暂无", job: "主任" },
 ]);
 const keyword = ref('')
 const dialogVisible = ref(false);
@@ -87,13 +91,15 @@ const formRef = ref()
 const form = reactive({
     name: "",
     age: "",
-    gender: "",
-    department: "",
-    job: "",
-    contact: "",
-    details: ""
+    sex: "",
+    departmentId: "1",
+    jobTitle: "1",
+    phone: "",
+    desc: ""
 });
-const search = () => {
+const search = async () => {
+    const res = await reqSearchDoctor(keyword.value)
+    console.log(res);
 
 }
 const pageSize = 10; // 每页显示的记录数
@@ -109,43 +115,45 @@ const rules = {
     age: [
         { required: true, message: '请输入排班时间', trigger: 'blur' },
     ],
-    gender: [
+    sex: [
         { required: true, message: '请输入班次', trigger: 'blur' },
     ],
-    department: [
+    departmentId: [
         { required: true, message: '请输入医生', trigger: 'blur' },
     ],
-    job: [
+    jobTitle: [
         { required: true, message: '请输入科室', trigger: 'blur' },
     ],
-    contact: [
+    phone: [
         { required: true, message: '请输入科室', trigger: 'blur' },
     ],
-    details: [
+    desc: [
         { required: true, message: '请输入科室', trigger: 'blur' },
     ],
 }
 const dialogTitle = ref('')
-const addDoctor = () => {
+const addDoctor = async () => {
+
+
     dialogVisible.value = true;
     dialogTitle.value = '新增医生';
     Object.assign(form, {
         name: '',
         age: "",
-        gender: "",
-        department: "",
-        job: "",
-        contact: '',
-        details: ""
+        sex: "",
+        departmentId: "1",
+        jobTitle: "1",
+        phone: '',
+        desc: ""
     })
     nextTick(() => {
         formRef.value.clearValidate('name');
         formRef.value.clearValidate('age');
-        formRef.value.clearValidate('gender');
-        formRef.value.clearValidate('department');
-        formRef.value.clearValidate('job');
-        formRef.value.clearValidate('contact');
-        formRef.value.clearValidate('details');
+        formRef.value.clearValidate('sex');
+        formRef.value.clearValidate('departmentId');
+        formRef.value.clearValidate('jobTitle');
+        formRef.value.clearValidate('phone');
+        formRef.value.clearValidate('desc');
     });
 }
 
@@ -155,32 +163,18 @@ const editDoctor = (doctor: any) => {
     nextTick(() => {
         formRef.value.clearValidate('name');
         formRef.value.clearValidate('age');
-        formRef.value.clearValidate('gender');
-        formRef.value.clearValidate('department');
-        formRef.value.clearValidate('job');
-        formRef.value.clearValidate('contact');
-        formRef.value.clearValidate('details');
+        formRef.value.clearValidate('sex');
+        formRef.value.clearValidate('departmentId');
+        formRef.value.clearValidate('jobTitle');
+        formRef.value.clearValidate('phone');
+        formRef.value.clearValidate('desc');
     });
 }
 
 const saveDoctor = async () => {
     await formRef.value.validate()
-    // if (currentSchedule) {
-    //     // 编辑排班
-    //     currentSchedule.date = form.date;
-    //     currentSchedule.shift = form.shift;
-    //     currentSchedule.doctor = form.doctor;
-    //     currentSchedule.department = form.department;
-    // } else {
-    //     // 新增排班
-    //     const newSchedule = {
-    //         date: form.date,
-    //         shift: form.shift,
-    //         doctor: form.doctor,
-    //         department: form.department
-    //     };
-    //     scheduleList.value.push(newSchedule);
-    // }
+    const res = await reqAddDoctor(form)
+    console.log(res);
     dialogVisible.value = false;
 }
 const deleteDoctor = (doctor: any) => {

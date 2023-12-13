@@ -5,8 +5,8 @@
                 <h1>医信网系统登录</h1>
                 <div class="form">
                     <el-form :model="loginForm" :rules="formRules" ref="form" label-width="100px">
-                        <el-form-item label="手机号" prop="phone">
-                            <el-input v-model="loginForm.phone" placeholder="请输入手机号"></el-input>
+                        <el-form-item label="手机号" prop="username">
+                            <el-input v-model="loginForm.username" placeholder="请输入手机号"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
                             <el-input v-model="loginForm.password" show-password placeholder="请输入密码"></el-input>
@@ -25,16 +25,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
+import { reqLogin } from '../../api/user/index'
 let $router = useRouter();
 const form = ref(null);
 
 const loginForm = ref({
-    phone: '',
+    username: '',
     password: '',
 });
 
 const formRules = {
-    phone: [
+    username: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
         { pattern: /^1\d{10}$/, message: '手机号格式不正确', trigger: 'blur' },
     ],
@@ -46,11 +47,21 @@ const formRules = {
 };
 
 const submitForm = () => {
-    form.value.validate((valid) => {
+    form.value.validate(async (valid) => {
         if (valid) {
-            console.log(loginForm.value);
-            alert('登录成功！');
-            $router.push("/main")
+            const res = await reqLogin(loginForm.value)
+            console.log(res);
+            if (res.code === '0') {
+                alert('登录成功！');
+                window.localStorage.setItem("userId", res.data.userId)
+                window.localStorage.setItem("realName", res.data.realName)
+                console.log(window.localStorage.getItem("userId"));
+
+                $router.push("/main")
+            }
+            else {
+                alert("登录失败")
+            }
         }
     });
 };

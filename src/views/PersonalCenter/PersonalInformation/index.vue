@@ -4,11 +4,11 @@
             <div class="main">
                 <h2>个人信息</h2>
                 <el-form :model="profileForm" :rules="formRules" ref="form" label-width="120px">
-                    <el-form-item label="姓名" prop="name">
-                        <el-input v-model="profileForm.name" :disabled="!isEditing"></el-input>
+                    <el-form-item label="姓名" prop="realName">
+                        <el-input v-model="profileForm.realName" :disabled="!isEditing"></el-input>
                     </el-form-item>
                     <el-form-item label="性别" prop="gender">
-                        <el-radio-group v-model="profileForm.gender" :disabled="!isEditing">
+                        <el-radio-group v-model="profileForm.sex" :disabled="!isEditing">
                             <el-radio label="男">男</el-radio>
                             <el-radio label="女">女</el-radio>
                         </el-radio-group>
@@ -38,14 +38,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { reqGetPersonInfo, reqUpdatePersonInfo } from '../../../api/user/index'
+onMounted(async () => {
+    const res = await reqGetPersonInfo(window.localStorage.getItem("userId"))
+    console.log(res);
+    profileForm.value = res.data
 
+})
 const form = ref(null);
 const isEditing = ref(false);
 
 const profileForm = ref({
-    name: '张三',
-    gender: '男',
+    userId: window.localStorage.getItem("userId"),
+    realName: '张三',
+    sex: '男',
     age: 30,
     phone: '1234567890',
     address: '北京市',
@@ -55,7 +62,7 @@ const formRules = {
     name: [
         { required: true, message: '请填写姓名', trigger: 'blur' },
     ],
-    gender: [
+    sex: [
         { required: true, message: '请选择性别', trigger: 'change' },
     ],
     age: [
@@ -88,10 +95,12 @@ const cancelEdit = () => {
 };
 
 const saveForm = () => {
-    form.value.validate((valid) => {
+    form.value.validate(async (valid) => {
         if (valid) {
             // 在这里可以编写提交表单的逻辑，比如发送HTTP请求等
-            console.log(profileForm.value);
+            // console.log(profileForm.value);
+            const res = await reqUpdatePersonInfo(profileForm.value)
+            console.log(res);
             alert('保存成功！');
             isEditing.value = false;
         }

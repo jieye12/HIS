@@ -5,14 +5,26 @@
                 <h1>医信网系统注册</h1>
                 <div class="form">
                     <el-form :model="registerForm" :rules="formRules" ref="form" label-width="100px">
-                        <el-form-item label="手机号" prop="phone">
-                            <el-input v-model="registerForm.phone" placeholder="请输入要注册的手机号"></el-input>
+                        <el-form-item label="昵称" prop="username">
+                            <el-input v-model="registerForm.username" placeholder="请输入昵称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="真实姓名" prop="realName">
+                            <el-input v-model="registerForm.realName" placeholder="请输入真实姓名"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
                             <el-input v-model="registerForm.password" show-password placeholder="请输入密码"></el-input>
                         </el-form-item>
                         <el-form-item label="确认密码" prop="confirmPassword">
                             <el-input v-model="registerForm.confirmPassword" show-password placeholder="请确认密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="身份证号" prop="idNo">
+                            <el-input v-model="registerForm.idNo" placeholder="请输身份证号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="年龄" prop="age">
+                            <el-input v-model="registerForm.age" placeholder="请输入年龄"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机号" prop="phone">
+                            <el-input v-model="registerForm.phone" placeholder="请输入要注册的手机号"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submitForm"
@@ -28,13 +40,18 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { reqRegister } from '../../api/user/index'
 let $router = useRouter();
 const form = ref(null);
 
 const registerForm = ref({
-    phone: '',
+    username: "",
+    realName: "",
     password: '',
     confirmPassword: '',
+    idNo: "",
+    age: "",
+    phone: '',
 });
 const validateConfirmPassword = (rule: any, value: any, callback: any) => {
     if (value !== registerForm.value.password) {
@@ -61,10 +78,14 @@ const formRules = {
 
 
 const submitForm = () => {
-    form.value.validate((valid: any) => {
+    form.value.validate(async (valid: any) => {
         if (valid) {
-            console.log(registerForm.value);
+            let res = await reqRegister(registerForm.value)
+            console.log(res.value);
+
+            // console.log(registerForm.value);
             alert('注册成功！');
+            $router.push("/")
         }
     });
 };
@@ -80,10 +101,10 @@ const submitForm = () => {
 
     .el-card {
         position: absolute;
-        top: 25%;
+        top: 15%;
         right: 10%;
         width: 25%;
-        height: 35vh;
+        height: 55vh;
         min-width: 500px;
         min-height: 300px;
 

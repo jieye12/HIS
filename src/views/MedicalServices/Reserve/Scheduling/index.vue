@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { reqGetAppoint } from '../../../../api/medicalservice/index';
 const value = ref('2023-10-09')
 const holidays = [
     '2021-10-01',
@@ -92,7 +92,17 @@ let day: any = currentDate.getDate() + ""
 day = day < 10 ? "0" + day : day
 let time = month + "-" + day
 const flag = ref(false)
-const reserve = (item: any) => {
+const reserve = async (item: any) => {
+    const res = await reqGetAppoint({
+        userId: localStorage.getItem("userId"),
+        realName: localStorage.getItem("realName"),
+        departmentId: 1,
+        doctorId: 1,
+        time: "2023-12-12",
+        result: "等待中",
+    })
+    console.log(res);
+
     alert("预约成功")
     flag.value = true
 }

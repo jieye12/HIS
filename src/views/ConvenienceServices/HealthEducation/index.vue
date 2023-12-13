@@ -35,7 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { reqgetPromotionalAreaInformation } from '../../../api/service/index'
+onMounted(async () => {
+    const res = await reqgetPromotionalAreaInformation()
+    console.log(res);
+    date.value = res.data
+})
 const searchContent = ref("")
 const date = ref([{
     title: "医保患者住院须知",

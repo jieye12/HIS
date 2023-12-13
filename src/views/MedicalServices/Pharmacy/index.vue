@@ -8,10 +8,9 @@
                     <div class="clear"></div>
                 </div>
                 <div class="main">
-                    <div class="column" v-for="(item, index) in drugs">
-                        <h1>{{ item.title }}</h1>
-                        <div class="shows" v-for="(drug, index) in item.drugs" @click="turnToDetails(drug)">
-                            <img src="../../../assets/images/drug1.webp" alt="">
+                    <div class="column" v-for="(drug, index) in drugs">
+                        <div class="shows" @click="turnToDetails(drug.id)">
+                            <img :src="drug.pictureUrl" alt="">
                             <div class="name">{{ drug.name }}</div>
                             <div class="price">￥{{ drug.price }}</div>
                         </div>
@@ -25,79 +24,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
+import { reqGetShop, reqGetShopDetail } from '../../../api/medicalservice/index'
+onMounted(async () => {
+    const res = await reqGetShop("健")
+    console.log(res)
+    drugs.value = res.data
+})
 const $router = useRouter()
 const drugName = ref("")
-const getDrug = () => {
-    console.log(name);
+const getDrug = async () => {
+    const res = await reqGetShop("健")
+    console.log(res)
+    drugs.value = res.data
 }
 const drugs = ref([{
-    title: "皮肤科用药",
-    drugs: [{
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "达霏欣",
-        price: "148",
-        imgUrl: ""
-    }]
+    id: 1,
+    name: "达霏欣",
+    price: "148",
+    pictureUrl: ""
 }, {
-    title: "感冒药",
-    drugs: [{
-        id: 1,
-        name: "999",
-        price: 14,
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "999",
-        price: 14,
-        imgUrl: ""
-    }]
+    id: 2,
+    name: "达霏欣",
+    price: "148",
+    imgUrl: ""
 }, {
-    title: "保健品",
-    drugs: [{
-        id: 1,
-        name: "六位帝皇丸",
-        price: 123,
-        imgUrl: ""
-    }, {
-        id: 1,
-        name: "六位帝皇丸",
-        price: 123,
-        imgUrl: ""
-    }]
+    id: 3,
+    name: "达霏欣",
+    price: "148",
+    imgUrl: ""
 }])
-const turnToDetails = () => {
+const turnToDetails = async (id: any) => {
+    localStorage.setItem("drugId", id)
     $router.push("/drug_details")
 }
 </script>

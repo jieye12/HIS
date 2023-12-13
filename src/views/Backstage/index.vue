@@ -107,12 +107,12 @@
                     </el-menu-item>
                 </el-sub-menu>
                 <!-- 财务管理 -->
-                <el-menu-item>
+                <!-- <el-menu-item>
                     <el-icon>
                         <Shop />
                     </el-icon>
                     <router-link to="/financial_management">财务统计</router-link>
-                </el-menu-item>
+                </el-menu-item> -->
                 <!-- 系统管理 -->
                 <el-sub-menu index="5">
                     <template #title>

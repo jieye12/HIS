@@ -16,9 +16,9 @@
             <el-button type="primary" size="default" @click="addDepartment" style="margin:10px;">添加科室</el-button>
             <el-table :data="departmentList" v-if="departmentList.length" border>
                 <el-table-column prop="name" label="科室名称" align="center"></el-table-column>
-                <el-table-column prop="number" label="科室编号" align="center"></el-table-column>
-                <el-table-column prop="description" label="科室描述" align="center"></el-table-column>
-                <el-table-column prop="manager" label="科室负责人" align="center"></el-table-column>
+                <el-table-column prop="id" label="科室编号" align="center"></el-table-column>
+                <el-table-column prop="desc" label="科室描述" align="center"></el-table-column>
+                <el-table-column prop="departmentPrincipal" label="科室负责人" align="center"></el-table-column>
                 <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
@@ -37,14 +37,14 @@
                     <el-form-item label="科室名称" prop="name">
                         <el-input v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室编号" prop="number">
-                        <el-input v-model="form.number"></el-input>
+                    <el-form-item label="科室编号" prop="id">
+                        <el-input v-model="form.id"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室描述" prop="description">
-                        <el-input v-model="form.description"></el-input>
+                    <el-form-item label="科室描述" prop="desc">
+                        <el-input v-model="form.desc"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室负责人" prop="manager">
-                        <el-input v-model="form.manager"></el-input>
+                    <el-form-item label="科室负责人" prop="departmentPrincipal">
+                        <el-input v-model="form.departmentPrincipal"></el-input>
                     </el-form-item>
                     <el-form-item label="联系方式" prop="contact">
                         <el-input v-model="form.contact"></el-input>
@@ -60,8 +60,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick } from 'vue';
+import { ref, reactive, nextTick, onMounted } from 'vue';
 import { ElMessageBox } from 'element-plus'
+import { reqgetDepartmentService } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqgetDepartmentService()
+    console.log(res);
+    departmentList.value = res.data
+})
 const keyword = ref("")
 const searchForm = ref({
     departmentId: ''
@@ -69,9 +75,9 @@ const searchForm = ref({
 const formRef = ref()
 const form = reactive({
     name: '',
-    number: '',
-    description: '',
-    manager: '',
+    id: '',
+    desc: '',
+    departmentPrincipal: '',
     contact: ''
 });
 const pageSize = 10; // 每页显示的记录数
@@ -135,16 +141,16 @@ const addDepartment = () => {
     dialogTitle.value = '新增科室';
     Object.assign(form, {
         name: '',
-        number: '',
-        description: '',
-        manager: '',
+        id: '',
+        desc: '',
+        departmentPrincipal: '',
         contact: ''
     })
     nextTick(() => {
         formRef.value.clearValidate('name');
-        formRef.value.clearValidate('number');
-        formRef.value.clearValidate('description');
-        formRef.value.clearValidate('manager');
+        formRef.value.clearValidate('id');
+        formRef.value.clearValidate('desc');
+        formRef.value.clearValidate('departmentPrincipal');
         formRef.value.clearValidate('contact');
     });
 }
@@ -155,9 +161,9 @@ const editDepartment = (row) => {
     Object.assign(form, row);
     nextTick(() => {
         formRef.value.clearValidate('name');
-        formRef.value.clearValidate('number');
-        formRef.value.clearValidate('description');
-        formRef.value.clearValidate('manager');
+        formRef.value.clearValidate('id');
+        formRef.value.clearValidate('desc');
+        formRef.value.clearValidate('departmentPrincipal');
         formRef.value.clearValidate('contact');
     });
 }
@@ -167,17 +173,17 @@ const saveDepartment = async () => {
     if (currentDepartment) {
         // 编辑科室
         currentDepartment.name = form.name;
-        currentDepartment.number = form.number;
-        currentDepartment.description = form.description;
-        currentDepartment.manager = form.manager;
+        currentDepartment.id = form.id;
+        currentDepartment.desc = form.desc;
+        currentDepartment.departmentPrincipal = form.departmentPrincipal;
         currentDepartment.contact = form.contact;
     } else {
         // 新增科室
         const newDepartment = {
             name: form.name,
-            number: form.number,
-            description: form.description,
-            manager: form.manager,
+            id: form.id,
+            desc: form.desc,
+            departmentPrincipal: form.departmentPrincipal,
             contact: form.contact
         };
         departmentList.value.push(newDepartment);

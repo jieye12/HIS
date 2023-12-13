@@ -5,20 +5,23 @@
             <img src="../../assets//images/avatar.jpg" alt="">
             <span v-if="isAdmin" title="记得完善个人信息">13525164584</span>
             <span v-else>jieye</span>
+            <span><el-button @click="logout()">退出登录</el-button></span>
         </div>
         <div class="clear"></div>
     </header>
     <div class="main">
         <router-view></router-view>
     </div>
-    <footer>
-
-    </footer>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+let $router = useRouter()
 const isAdmin = ref(true)
+const logout = () => {
+    $router.push("/")
+}
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +45,7 @@ header {
 
     .context {
         float: right;
-        width: 200px;
+        width: 300px;
         height: 70px;
         line-height: 0;
 
@@ -59,6 +62,12 @@ header {
             display: inline-block;
             width: 100px;
             height: 70px;
+            margin-right: 10px;
+        }
+
+        .el-button {
+            color: red;
+            background-color: aqua;
         }
     }
 }

@@ -16,11 +16,11 @@
             <el-button type="primary" @click="addPurchaseRecord" style="margin:10px;">添加进货记录</el-button>
             <el-table :data="purchaseRecords" border>
                 <el-table-column prop="id" label="id" align="center"></el-table-column>
-                <el-table-column prop="productName" label="药品名称" align="center"></el-table-column>
+                <el-table-column prop="name" label="药品名称" align="center"></el-table-column>
                 <el-table-column prop="supplier" label="供应商" align="center"></el-table-column>
-                <el-table-column prop="quantity" label="进货数量" align="center"></el-table-column>
-                <el-table-column prop="price" label="进货价格" align="center"></el-table-column>
-                <el-table-column prop="date" label="进货日期" align="center"></el-table-column>
+                <el-table-column prop="purchaseQuantity" label="进货数量" align="center"></el-table-column>
+                <el-table-column prop="purchasePrice" label="进货价格" align="center"></el-table-column>
+                <el-table-column prop="time" label="进货日期" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
                         <el-button @click="editPurchaseRecord(row)" type="primary" size="small">编辑</el-button>
@@ -35,20 +35,22 @@
             <!-- 编辑/添加进货记录对话框 -->
             <el-dialog v-model="dialogVisible" :title="dialogTitle">
                 <el-form :model="currentPurchaseRecord" :rules="purchaseRecordFormRules" ref="formRef" label-width="100px">
-                    <el-form-item label="药品名称" prop="productName">
-                        <el-input v-model="currentPurchaseRecord.productName" placeholder="请输入药品名称"></el-input>
+                    <el-form-item label="药品名称" prop="name">
+                        <el-input v-model="currentPurchaseRecord.name" placeholder="请输入药品名称"></el-input>
                     </el-form-item>
                     <el-form-item label="供应商" prop="supplier">
                         <el-input v-model="currentPurchaseRecord.supplier" placeholder="请输入供应商"></el-input>
                     </el-form-item>
-                    <el-form-item label="进货数量" prop="quantity">
-                        <el-input-number v-model="currentPurchaseRecord.quantity" :min="1" :precision="0"></el-input-number>
+                    <el-form-item label="进货数量" prop="purchaseQuantity">
+                        <el-input-number v-model="currentPurchaseRecord.purchaseQuantity" :min="1"
+                            :precision="0"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="进货价格" prop="price">
-                        <el-input-number v-model="currentPurchaseRecord.price" :min="0" :precision="2"></el-input-number>
+                    <el-form-item label="进货价格" prop="purchasePrice">
+                        <el-input-number v-model="currentPurchaseRecord.purchasePrice" :min="0"
+                            :precision="2"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="进货日期" prop="date">
-                        <el-date-picker v-model="currentPurchaseRecord.date" type="date"
+                    <el-form-item label="进货日期" prop="time">
+                        <el-date-picker v-model="currentPurchaseRecord.time" type="date"
                             placeholder="请选择进货日期"></el-date-picker>
                     </el-form-item>
                 </el-form>
@@ -65,7 +67,12 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { ElTable, ElTableColumn, ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElInputNumber, ElDatePicker } from 'element-plus';
-
+import { reqMedical } from '../../../../api/backstage/index'
+onMounted(async () => {
+    const res = await reqMedical()
+    console.log(res);
+    purchaseRecords.value = res.data
+})
 // 数据模拟
 const purchaseRecords = ref([
     { id: 1, productName: '阿司匹林', supplier: 'XX药厂', quantity: 100, price: 10.5, date: '2023-09-28' },
@@ -82,11 +89,11 @@ const limit = ref(10)
 const formRef = ref()
 // 当前编辑的进货记录
 const currentPurchaseRecord = reactive({
-    productName: '',
+    name: '',
     supplier: '',
-    quantity: 0,
-    price: 0,
-    date: null,
+    purchaseQuantity: 0,
+    purchasePrice: 0,
+    time: null,
 });
 const dialogTitle = ref("")
 // 表单验证规则
@@ -111,18 +118,18 @@ const addPurchaseRecord = () => {
     dialogVisible.value = true;
     dialogTitle.value = '新增进货记录';
     Object.assign(currentPurchaseRecord, {
-        productName: '',
+        name: '',
         supplier: '',
-        quantity: 0,
-        price: 0,
-        date: null,
+        purchaseQuantity: 0,
+        purchasePrice: 0,
+        time: null,
     })
     nextTick(() => {
-        formRef.value.clearValidate('productName');
+        formRef.value.clearValidate('name');
         formRef.value.clearValidate('supplier');
-        formRef.value.clearValidate('quantity');
-        formRef.value.clearValidate('price');
-        formRef.value.clearValidate('date');
+        formRef.value.clearValidate('purchaseQuantity');
+        formRef.value.clearValidate('purchasePrice');
+        formRef.value.clearValidate('time');
     });
 }
 
@@ -132,11 +139,11 @@ const editPurchaseRecord = (row) => {
     dialogTitle.value = '编辑进货记录';
     Object.assign(currentPurchaseRecord, row)
     nextTick(() => {
-        formRef.value.clearValidate('productName');
+        formRef.value.clearValidate('name');
         formRef.value.clearValidate('supplier');
-        formRef.value.clearValidate('quantity');
-        formRef.value.clearValidate('price');
-        formRef.value.clearValidate('date');
+        formRef.value.clearValidate('purchaseQuantity');
+        formRef.value.clearValidate('purchasePrice');
+        formRef.value.clearValidate('time');
     });
 }
 

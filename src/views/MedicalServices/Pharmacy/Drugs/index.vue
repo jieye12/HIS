@@ -3,11 +3,11 @@
         <el-card>
             <div class="top">
                 <div class="left">
-                    <img src="../../../../assets/images/drug1.webp" alt="">
+                    <img :src="drug.pictureUrl" alt="">
                 </div>
                 <div class="right">
                     <div class="description">
-                        {{ drug.description }}
+                        {{ drug.name }}
                     </div>
                     <div class="ingredients">
                         <h3>药品成分</h3>
@@ -19,11 +19,12 @@
                     </div>
                     <div class="use">
                         <h3>药品用途</h3>
-                        <ol>
+                        {{ drug.use }}
+                        <!-- <ol>
                             <li v-for="(use, index) in drug.use">
-                                {{ use }}
+                                 {{ use }} 
                             </li>
-                        </ol>
+                        </ol> -->
                     </div>
                 </div>
                 <div class="clear"></div>
@@ -37,8 +38,8 @@
             </div>
             <div class="bottom">
                 <h2>支付购买</h2>
-                <el-input-number v-model="number" min="1"></el-input-number>
-                <el-button type="danger">前往支付</el-button>
+                <el-input-number v-model="drug.count" min="1"></el-input-number>
+                <el-button type="danger" @click="payment()">前往支付</el-button>
             </div>
             <footer>
                 <img src="../../../../assets/images/footer.jpg" alt="">
@@ -48,8 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { reqGetShopDetail, reqGetPayment } from '../../../../api/medicalservice/index'
 const drug = ref(<any>{
+    count: 10,
     description: "达霏欣 米诺地尔酊搽剂5%浓度60ml/瓶生发液生发凝胶喷雾治疗脱发斑秃育发生发",
     price: 147,
     ingredients: ["茯苓", "泽泻", "白术", "茵陈蒿"],
@@ -61,6 +64,32 @@ const drug = ref(<any>{
         "药物相互作用：告知医生或药师你目前正在使用的其他药物、补充剂或草药，以避免潜在的药物相互作用。",
         "儿童用药：达霏欣在儿童使用方面的安全性和适应症可能有限。在给儿童使用达霏欣之前，务必咨询儿科医生。"]
 })
+
+onMounted(async () => {
+    const id = localStorage.getItem("drugId")
+    console.log(id);
+
+    const res = await reqGetShopDetail(id)
+    console.log(res);
+    drug.value = res.data
+})
+const payment = async () => {
+    const res = await reqGetPayment({
+        medicinePays:
+            [
+                {
+                    id: 1,
+                    userId: localStorage.getItem("userId"),
+                    name: "汤臣倍健液体钙片K2维生素D维生素K软胶囊日常补钙D3中老年成人男女孕妇-钙DK100粒*2瓶",
+                    type: "保健品",
+                    count: 1,
+                    price: "159.00"
+                }
+            ]
+    })
+    console.log(res);
+
+}
 const date = ref({
     number: 1,
     prices: 12,
@@ -78,6 +107,7 @@ const number = ref(1)
     background-color: #e8f3f3;
     padding: 10px;
     box-sizing: border-box;
+    // overflow:hidden,
 
     .el-card {
         width: 60%;

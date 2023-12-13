@@ -28,4 +28,14 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      "/9091": {
+        target: "http://192.168.49.1:9091",
+        ws: true,
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+    }
+  }
 })

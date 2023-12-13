@@ -15,7 +15,7 @@
                 <div class="context">
                     <el-form label-width="100px" :model="formDate" ref="form" :rules="formRules">
                         <el-form-item label="姓名" prop="name">
-                            <el-input placeholder=" 请输入住院者姓名"></el-input>
+                            <el-input placeholder=" 请输入住院者姓名" v-model="formDate.name"></el-input>
                         </el-form-item>
                         <el-form-item label="性别" prop="gender">
                             <el-radio-group v-model="formDate.gender" class="ml-4">
@@ -24,7 +24,7 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item label="病房类型" prop="type">
-                            <el-cascader :options="options" clearable />
+                            <el-cascader :options="options" clearable v-model="formDate.type" />
                         </el-form-item>
                         <el-form-item label="住院日期" prop="time">
                             <div class="block">
@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { reqGetHospitalApplication } from '../../../api/medicalservice/index'
 const form = ref(null)
 const formDate = ref({
     name: "",
@@ -72,14 +73,20 @@ const formRules = {
     time: [{ required: true, message: '请选择住院时间', trigger: 'blur' },]
 };
 const submitForm = () => {
-    form.value.validate((valid) => {
+    form.value.validate(async (valid) => {
         if (valid) {
-            // 表单验证通过，可以执行提交操作
-            // 在这里添加你的提交逻辑
-            console.log('表单验证通过');
-        } else {
-            // 表单验证不通过，显示错误信息
-            $message.error('请检查表单填写内容');
+            const res = await reqGetHospitalApplication({
+                userId: localStorage.getItem("userId"),
+                department: "皮肤科",
+                doctorId: 1,
+                admissionTime: "2023-12-13",
+                dischargeTime: "2023-12-20",
+                hospitalizationDetails: "该患者患皮肤科疾病，请求住院",
+            })
+            console.log(res);
+            if (res.code === '0') {
+                alert("预约成功")
+            }
         }
     })
 }
