@@ -35,7 +35,7 @@ onMounted(async () => {
 const $router = useRouter()
 const drugName = ref("")
 const getDrug = async () => {
-    const res = await reqGetShop("健")
+    const res = await reqGetShop(drugName.value)
     console.log(res)
     drugs.value = res.data
 }
