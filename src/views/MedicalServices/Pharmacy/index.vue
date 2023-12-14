@@ -8,8 +8,8 @@
                     <div class="clear"></div>
                 </div>
                 <div class="main">
-                    <div class="column" v-for="(drug, index) in drugs">
-                        <div class="shows" @click="turnToDetails(drug.id)">
+                    <div class="column">
+                        <div class="shows" @click="turnToDetails(drug.id)" v-for="(drug, index) in drugs">
                             <img :src="drug.pictureUrl" alt="">
                             <div class="name">{{ drug.name }}</div>
                             <div class="price">￥{{ drug.price }}</div>
@@ -28,7 +28,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { reqGetShop, reqGetShopDetail } from '../../../api/medicalservice/index'
 onMounted(async () => {
-    const res = await reqGetShop("健")
+    const res = await reqGetShop("")
     console.log(res)
     drugs.value = res.data
 })
@@ -90,33 +90,32 @@ const turnToDetails = async (id: any) => {
             }
 
             .main {
-                .column {
-                    h1 {
-                        margin: 5px;
-                    }
 
-                    .shows {
-                        float: left;
+                h1 {
+                    margin: 5px;
+                }
+
+                .shows {
+                    float: left;
+                    width: 200px;
+                    margin: 20px;
+                    text-align: center;
+
+                    img {
                         width: 200px;
-                        margin: 5px;
-                        text-align: center;
-
-                        img {
-                            // display: block;
-                            width: 200px;
-                            height: 200px;
-                        }
-
-                        .name {
-                            font-size: 15px;
-                            line-height: 1.5;
-                        }
-
-                        .price {
-                            font-size: 16px;
-                            color: red;
-                        }
+                        height: 200px;
                     }
+
+                    .name {
+                        font-size: 15px;
+                        line-height: 1.5;
+                    }
+
+                    .price {
+                        font-size: 16px;
+                        color: red;
+                    }
+
                 }
             }
         }

@@ -2,21 +2,21 @@
     <div class="all">
         <div class="main">
             <el-card>
-                <el-form :model="form" ref="form" label-width="100px" class="appointment-form" :rules="formRules">
-                    <el-form-item label="姓名" prop="name">
-                        <el-input v-model="form.name"></el-input>
+                <el-form :model="form" ref="formCon" label-width="100px" class="appointment-form" :rules="formRules">
+                    <el-form-item label="姓名" prop="realName">
+                        <el-input v-model="form.realName"></el-input>
                     </el-form-item>
-                    <el-form-item label="性别" prop="gender">
-                        <el-radio-group v-model="form.gender">
-                            <el-radio label="male">男</el-radio>
-                            <el-radio label="female">女</el-radio>
+                    <el-form-item label="性别" prop="sex">
+                        <el-radio-group v-model="form.sex">
+                            <el-radio label="男">男</el-radio>
+                            <el-radio label="女">女</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="手机号码" prop="phone">
                         <el-input v-model="form.phone"></el-input>
                     </el-form-item>
-                    <el-form-item label="体检项目" prop="examination">
-                        <el-checkbox-group v-model="form.examination">
+                    <el-form-item label="体检项目" prop="projectCode">
+                        <el-checkbox-group v-model="form.projectCode">
                             <el-checkbox label="视力"></el-checkbox>
                             <el-checkbox label="听力"></el-checkbox>
                             <el-checkbox label="心肺功能"></el-checkbox>
@@ -38,31 +38,45 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { reqAppointment } from '../../../../api/convenienceservice/index'
+import { ElMessage } from 'element-plus';
 const form = ref({
-    name: '',
-    gender: '',
+    realName: '',
+    sex: '',
     phone: '',
-    examination: []
+    projectCode: [],
+    physicalExaminationTime: '2023-12-15'
 });
+const formCon = ref()
 const formRules = {
-    name: [
+    realName: [
         { required: true, message: '请输入姓名', trigger: 'blur' },
     ],
-    gender: [
+    sex: [
         { required: true, message: '请选择性别', trigger: 'blur' },
     ],
     phone: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
         { pattern: /^1\d{10}$/, message: '手机号格式不正确', trigger: 'blur' }
     ],
-    examination: [
-        { required: true, message: '请选择体检项目', trigger: 'blur' }
-    ]
 };
 const submitForm = () => {
-    form.value.validate((valid) => {
+    formCon.value.validate(async (valid) => {
         if (valid) {
-            console.log(loginForm.value);
+            const res = await reqAppointment(form.value)
+            console.log(res);
+            if (res.code === '0') {
+                ElMessage({
+                    message: "预约成功",
+                    type: 'success'
+                })
+            }
+            else {
+                ElMessage({
+                    message: "预约失败",
+                    type: 'error'
+                })
+            }
         }
     });
 };
