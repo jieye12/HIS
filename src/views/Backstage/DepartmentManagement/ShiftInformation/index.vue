@@ -22,9 +22,9 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination @size-change="sizeChange" @current-change="getHasTrademark" :pager-count="9"
-                v-model:current-page="pageNo" v-model:page-size="limit" :page-sizes="[3, 5, 7, 9]" :background="true"
-                layout="prev, pager, next, jumper,->,sizes,total" :total="total" style="margin:10px 0;" />
+            <el-pagination :pager-count="9" v-model:current-page="pageNo" v-model:page-size="limit"
+                :page-sizes="[3, 5, 7, 9]" :background="true" layout="prev, pager, next, jumper,->,sizes,total"
+                :total="total" style="margin:10px 0;" />
 
             <el-dialog title="排班详情" v-model="dialogVisible">
                 <el-form :model="form" label-width="80px" ref="formRef" :rules="rules">
@@ -55,9 +55,9 @@ import { ref, reactive, nextTick } from 'vue';
 import { ElMessageBox } from 'element-plus';
 
 const scheduleList = ref([
-    { id: 1, date: '2023-10-01', shift: '早班', doctor: '张三', department: '内科' },
-    { id: 2, date: '2023-10-02', shift: '中班', doctor: '李四', department: '外科' },
-    { id: 3, date: '2023-10-03', shift: '晚班', doctor: '王五', department: '儿科' }
+    { id: 1, date: '2023-12-15', shift: '早班', doctor: '张三', department: '内科' },
+    { id: 2, date: '2023-12-15', shift: '中班', doctor: '李四', department: '外科' },
+    { id: 3, date: '2023-12-15', shift: '晚班', doctor: '王五', department: '儿科' }
 ]);
 
 const dialogVisible = ref(false);
@@ -68,11 +68,17 @@ const form = reactive({
     doctor: '',
     department: ''
 });
+const search = () => {
+
+}
+const selectedDate = ref("")
+const pickerOptions = ref("")
 const pageSize = 10; // 每页显示的记录数
 const total = ref(0); // 总记录数
 const currentPage = ref(1); // 当前页码
 const limit = ref(10)
 let currentSchedule = ref();
+const pageNo = ref()
 const rules = {
     date: [
         { required: true, message: '请输入排班时间', trigger: 'blur' },

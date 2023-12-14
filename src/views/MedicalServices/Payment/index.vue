@@ -78,26 +78,22 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { ElMessage } from 'element-plus';
 // 缴费单信息
 const payment = ref({
     id: '123456',
     type: '门诊费用',
     date: '2023-10-06',
     hospital: '医药费+病房续费',
-    amount: 100.00, // 缴费金额直接展示
+    amount: 100.00,
 });
 
-// 缴费方式
 const paymentMethod = ref('现金');
 
-// 提交缴费
 const submitPayment = () => {
-    // 执行缴费逻辑，可以发送请求到后端进行缴费操作
-    // 在这里只简单打印缴费信息
-    console.log('缴费单ID:', payment.id);
-    console.log('缴费金额:', payment.amount);
-    console.log('缴费方式:', paymentMethod.value);
+    ElMessage({
+        message: "支付功能暂未开通"
+    })
 }
 </script>
 
@@ -144,7 +140,7 @@ const submitPayment = () => {
                     width: 200px;
                     text-align: right;
                     font-weight: 700;
-                    color: cornflowerblue;
+                    font-size: large;
                 }
             }
 

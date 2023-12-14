@@ -40,22 +40,22 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { reqGetPersonInfo, reqUpdatePersonInfo } from '../../../api/user/index'
+import { ElMessage } from 'element-plus';
 onMounted(async () => {
     const res = await reqGetPersonInfo(window.localStorage.getItem("userId"))
     console.log(res);
     profileForm.value = res.data
-
 })
 const form = ref(null);
 const isEditing = ref(false);
 
 const profileForm = ref({
-    userId: window.localStorage.getItem("userId"),
-    realName: '张三',
-    sex: '男',
-    age: 30,
-    phone: '1234567890',
-    address: '北京市',
+    // userId: window.localStorage.getItem("userId"),
+    // realName: '张三',
+    // sex: '男',
+    // age: 30,
+    // phone: '1234567890',
+    // address: '北京市',
 });
 
 const formRules = {
@@ -79,29 +79,34 @@ const formRules = {
 
 const startEdit = () => {
     isEditing.value = true;
+
 };
 
-const cancelEdit = () => {
+const cancelEdit = async () => {
     isEditing.value = false;
-    // 重置表单数据
-    profileForm.value = {
-        name: '张三',
-        gender: '男',
-        age: 30,
-        phone: '1234567890',
-        address: '北京市',
-    };
+    const res = await reqGetPersonInfo(window.localStorage.getItem("userId"))
+    console.log(res);
+    profileForm.value = res.data
     form.value.resetFields();
 };
 
 const saveForm = () => {
     form.value.validate(async (valid) => {
         if (valid) {
-            // 在这里可以编写提交表单的逻辑，比如发送HTTP请求等
-            // console.log(profileForm.value);
             const res = await reqUpdatePersonInfo(profileForm.value)
             console.log(res);
-            alert('保存成功！');
+            if (res.code === '0') {
+                ElMessage({
+                    message: "保存成功",
+                    type: "success"
+                })
+            }
+            else {
+                ElMessage({
+                    message: "保存失败",
+                    type: "error"
+                })
+            }
             isEditing.value = false;
         }
     });

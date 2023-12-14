@@ -8,9 +8,9 @@ enum API {
     GETDoctor_URL = "http://192.168.58.59:9093/People-Service/doctor/getDoctorInfo",
     SearchDoctor_URL = "http://192.168.58.59:9093/People-Service/doctor/getDoctorDetailed",
     AddDoctor_URL = "http://192.168.58.59:9093/People-Service/doctor/addDoctor",
-    GETPatient_URL = "http://192.168.58.59:9093/People-Service/patient/getDoctorInfo",
-    SearchPatient_URL = "http://192.168.58.59:9093/People-Service/patient/getDoctorDetailed",
-    AddPatient_URL = "http://192.168.58.59:9093/People-Service/patient/addDoctor",
+    GETPatient_URL = "http://192.168.58.59:9093/People-Service/patient/getPatientInfo",
+    SearchPatient_URL = "http://192.168.58.59:9093/People-Service/patient/getPatientDetailed",
+    UpdatePatient_URL = "http://192.168.58.59:9093/People-Service/patient/updatePatient",
     Medical_URL = "http://192.168.58.59:9095/Medical-Service/SalesManagement/getMedicineSales"
 }
 export const reqLogin = (data: any) => request.post<any, any>(API.LOGIN_URL, data)
@@ -21,6 +21,6 @@ export const reqSearchDoctor = (name: any) => request.get<any, any>(API.SearchDo
 export const reqAddDoctor = (data: any) => request.post<any, any>(API.AddDoctor_URL, data)
 export const reqGetPatient = () => request.get<any, any>(API.GETPatient_URL)
 export const reqSearchPatient = (name: any) => request.get<any, any>(API.SearchPatient_URL + `?name=${name}`)
-export const reqAddPatient = (data: any) => request.post<any, any>(API.AddPatient_URL, data)
+export const reqUpdatePatient = (data: any) => request.post<any, any>(API.UpdatePatient_URL, data)
 export const reqMedical = () => request.get<any, any>(API.Medical_URL)
 

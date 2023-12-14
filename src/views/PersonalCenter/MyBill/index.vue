@@ -11,10 +11,7 @@
                     <el-table-column prop="accountStateCode" label="账单状态" align="center">
                         <template #default="{ row }">
                             <div class="a" v-if="row.accountStateCode == '未支付'">
-                                <el-button type="danger">未支付</el-button>
-                                <!-- <span><el-button type="primary" style="width:45%;margin-right: 3px;">确定</el-button></span>
-                                <span><el-button type="danger"
-                                        style="width:45%;text-align: center;">存在疑问？</el-button></span> -->
+                                <el-button type="danger" @click="turn()">未支付</el-button>
                             </div>
                             <div class="b" v-else-if="row.accountStateCode == '已支付'"><el-button>已确认</el-button></div>
                         </template>
@@ -29,6 +26,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { reqMyBill } from '../../../api/user/index'
+import { useRouter } from 'vue-router'
+let $router = useRouter()
 onMounted(async () => {
     const res = await reqMyBill(window.localStorage.getItem("userId"))
     console.log(res);
@@ -40,7 +39,9 @@ const billList = ref([
     { startDate: "2023-01-01", date: '2023-01-10', description: '手术费用', amount: 500, state: true },
     { startDate: "2023-01-20", date: '2023-01-20', description: '手术费用', amount: 800, state: false },
 ]);
-
+const turn = () => {
+    $router.push("/payment")
+}
 </script>
 
 <style lang="scss" scoped>

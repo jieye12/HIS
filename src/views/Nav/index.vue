@@ -108,7 +108,7 @@
 <style lang="scss" scoped>
 .cards {
     background-image: url(../../assets/images/bgi.jpg);
-    background-size: contain;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: space-between;

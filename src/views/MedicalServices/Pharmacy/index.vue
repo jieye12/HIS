@@ -39,22 +39,7 @@ const getDrug = async () => {
     console.log(res)
     drugs.value = res.data
 }
-const drugs = ref([{
-    id: 1,
-    name: "达霏欣",
-    price: "148",
-    pictureUrl: ""
-}, {
-    id: 2,
-    name: "达霏欣",
-    price: "148",
-    imgUrl: ""
-}, {
-    id: 3,
-    name: "达霏欣",
-    price: "148",
-    imgUrl: ""
-}])
+const drugs = ref()
 const turnToDetails = async (id: any) => {
     localStorage.setItem("drugId", id)
     $router.push("/drug_details")

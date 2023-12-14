@@ -36,7 +36,7 @@
                 :total="total" style="margin:10px 0;" />
 
             <el-dialog title="患者详情" v-model="dialogVisible">
-                <el-form :model="form" label-width="80px" ref="formRef" :rules="rules">
+                <el-form :model="form" label-width="80px" ref="formRef">
                     <el-form-item label="姓名" prop="name">
                         <el-input v-model="form.name" disabled></el-input>
                     </el-form-item>
@@ -77,7 +77,7 @@
 <script lang="ts" setup>
 import { ref, reactive, nextTick, onMounted } from 'vue';
 import { ElMessageBox } from 'element-plus';
-import { reqGetPatient, reqSearchPatient, reqAddPatient } from '../../../../api/backstage/index'
+import { reqGetPatient, reqSearchPatient, reqUpdatePatient } from '../../../../api/backstage/index'
 onMounted(async () => {
     const res = await reqGetPatient()
     console.log(res);
@@ -95,12 +95,15 @@ const keyword = ref('')
 const dialogVisible = ref(false);
 const formRef = ref()
 const form = reactive({
+    id: 0,
     name: "",
     age: "",
     sex: "",
     illness: "",
     mainDoctor: "",
     diagnosisTime: "",
+    departmentId: "",
+    DiagnosisTime: "",
     status: "",
     phone: "",
     desc: ""
@@ -108,6 +111,7 @@ const form = reactive({
 const search = async () => {
     const res = await reqSearchPatient(keyword.value)
     console.log(res);
+    patientList.value = res.data
 }
 const pageSize = 10; // 每页显示的记录数
 const total = ref(0); // 总记录数
@@ -115,32 +119,6 @@ const currentPage = ref(1); // 当前页码
 const pageNo = ref()
 const limit = ref(10)
 let currentSchedule = ref();
-const rules = {
-    age: [
-        { required: true, message: '请输入排班时间', trigger: 'blur' },
-    ],
-    gender: [
-        { required: true, message: '请输入班次', trigger: 'blur' },
-    ],
-    description: [
-        { required: true, message: '请输入医生', trigger: 'blur' },
-    ],
-    date: [
-        { required: true, message: '请输入科室', trigger: 'blur' },
-    ],
-    state: [
-        { required: true, message: '请输入科室', trigger: 'blur' },
-    ],
-    contact: [
-        { required: true, message: '请输入科室', trigger: 'blur' },
-    ],
-    details: [
-        { required: true, message: '请输入科室', trigger: 'blur' },
-    ],
-    doctor: [
-        { required: true, message: '请输入科室', trigger: 'blur' },
-    ],
-}
 const dialogTitle = ref('')
 
 function editSchedule(schedule: any) {
@@ -162,9 +140,23 @@ function editSchedule(schedule: any) {
 
 const saveSchedule = async () => {
     await formRef.value.validate()
-    const res = await reqAddPatient(form)
+    const res = await reqUpdatePatient({
+        id: form.id,
+        name: form.name,
+        age: form.age,
+        sex: form.sex,
+        illness: form.illness,
+        mainDoctor: form.mainDoctor,
+        departmentId: form.departmentId,
+        DiagnosisTime: form.DiagnosisTime,
+        phone: form.phone,
+        desc: form.desc
+    })
     console.log(res);
     dialogVisible.value = false;
+    const res2 = await reqGetPatient()
+    console.log(res);
+    patientList.value = res2.data
 }
 </script>
 

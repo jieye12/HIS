@@ -33,7 +33,7 @@
                             </div>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="danger" @click="submitForm">提交住院申请</el-button>
+                            <el-button type="danger" @click="submitForm" :disabled="flag">提交住院申请</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -45,7 +45,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { reqGetHospitalApplication } from '../../../api/medicalservice/index'
+import { ElMessage } from 'element-plus'
 const form = ref(null)
+const flag = ref(false)
 const formDate = ref({
     name: "",
     gender: "",
@@ -79,13 +81,23 @@ const submitForm = () => {
                 userId: localStorage.getItem("userId"),
                 department: "皮肤科",
                 doctorId: 1,
-                admissionTime: "2023-12-13",
+                admissionTime: "2023-12-14",
                 dischargeTime: "2023-12-20",
                 hospitalizationDetails: "该患者患皮肤科疾病，请求住院",
             })
             console.log(res);
             if (res.code === '0') {
-                alert("预约成功")
+                ElMessage({
+                    message: "申请成功",
+                    type: 'success'
+                })
+                flag.value = true
+            }
+            else {
+                ElMessage({
+                    message: "申请失败",
+                    type: 'error'
+                })
             }
         }
     })

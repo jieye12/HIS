@@ -26,7 +26,7 @@
                 <el-table-column prop="desc" label="详情" align="center"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template #default="{ row }">
-                        <span><el-button type="primary" @click="editDoctor(row)"
+                        <span><el-button disabled type="primary" @click="editDoctor(row)"
                                 style="width:45%;margin-right:5px;">编辑</el-button></span>
                         <span><el-button type="danger" @click="deleteDoctor(row)" style="width:45%;">删除</el-button></span>
                     </template>

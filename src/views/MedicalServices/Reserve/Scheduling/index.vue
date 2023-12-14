@@ -7,7 +7,6 @@
                     <template #default="cell">
                         <div class="cell" :class="{ current: cell.isCurrent }">
                             <span class="text">{{ cell.text }}</span>
-                            <span v-if="isHoliday(cell)" class="holiday" />
                         </div>
                     </template>
                 </el-date-picker>
@@ -55,7 +54,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { reqGetAppoint } from '../../../../api/medicalservice/index';
-const value = ref('2023-10-09')
+import { ElNotification } from 'element-plus';
+const value = ref('2023-12-14')
 const holidays = [
     '2021-10-01',
     '2021-10-02',
@@ -66,20 +66,17 @@ const holidays = [
     '2021-10-07',
 ]
 
-const isHoliday = ({ dayjs }) => {
-    return holidays.includes(dayjs.format('YYYY-MM-DD'))
-}
 const exit = ref(true)
 const doctors = ref([{
-    name: "老王",
-    title: "主治医师",
-    description: "医生简介:坚哲，皮肤病与性病学博士、副主任医师、副教授、博士研究生导师，教育部青年长江学者，陕西省中青年科技创新领军人才、美国科罗拉多大学博士后，美国科罗拉多大学皮肤美容中心访问学者。现任中华医学会皮肤性病学分会激光学组委员、注射美容学组副组长，陕西省医师协会皮肤科医师分会委员。从事皮肤科诊疗工作16年，有着丰富的皮肤科临床经验，熟悉各种皮肤激光和注射美容手术，擅长白癫风、黄褐斑等色素性皮肤病和座疮、面部皮炎等皮肤美容的临床诊治。",
+    name: "李斯",
+    title: "主任医师",
+    description: "李医生是一位资深的心脏病学专家，拥有超过二十年的临床经验。他在著名医学院取得医学学位，并后续在心脏病学领域取得博士学位。作为本医院的主任医师，他领导着一支高效专业的心脏病团队，致力于提供最先进的心血管护理。李的专业领域涵盖了从常见心脏疾病到复杂心血管手术的广泛范围。他是国际心脏病学协会的活跃成员，积极参与全球心血管研究项目。他的研究成果发表在多个国际医学期刊上，对心脏健康领域的发展贡献良多。",
     imgUrl: "",
     state: true,
     time: "上午"
 }, {
-    name: "老王",
-    title: "主治医师",
+    name: "劫夜",
+    title: "主任医师",
     description: "医生简介:坚哲，皮肤病与性病学博士、副主任医师、副教授、博士研究生导师，教育部青年长江学者，陕西省中青年科技创新领军人才、美国科罗拉多大学博士后，美国科罗拉多大学皮肤美容中心访问学者。现任中华医学会皮肤性病学分会激光学组委员、注射美容学组副组长，陕西省医师协会皮肤科医师分会委员。从事皮肤科诊疗工作16年，有着丰富的皮肤科临床经验，熟悉各种皮肤激光和注射美容手术，擅长白癫风、黄褐斑等色素性皮肤病和座疮、面部皮炎等皮肤美容的临床诊治。",
     imgUrl: "",
     state: true,
@@ -98,12 +95,16 @@ const reserve = async (item: any) => {
         realName: localStorage.getItem("realName"),
         departmentId: 1,
         doctorId: 1,
-        time: "2023-12-12",
+        time: "2023-12-15",
         result: "等待中",
     })
     console.log(res);
-
-    alert("预约成功")
+    if (res.code === '0') {
+        ElNotification({
+            type: 'success',
+            message: '预约成功',
+        });
+    }
     flag.value = true
 }
 </script>
@@ -202,7 +203,8 @@ const reserve = async (item: any) => {
 
 
         .description {
-            font-size: 10px;
+            text-indent: 2em;
+            font-size: 12px;
         }
 
         .times {

@@ -4,8 +4,8 @@
             <div class="box">
                 <img src="../../../assets/images/avatar.jpg" alt="" class="avatar">
                 <div class="bottom">
-                    <h3 class="title">晚上好，JieYe</h3>
-                    <p class="subtitle">HIS后台管理平台</p>
+                    <h3 class="title">上午好，{{ realName }}</h3>
+                    <p class="subtitle">医信网后台管理平台</p>
                 </div>
             </div>
         </el-card>
@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
+const realName = ref(localStorage.getItem("realName"))
 </script>
 
 <style lang="scss" scoped>

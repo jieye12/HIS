@@ -1,67 +1,28 @@
 <template>
     <div>
-        <el-card style="height: 80px;margin-bottom:20px;">
-            <el-form :inline="true" class="form">
-                <el-form-item label="用户名:">
-                    <el-input placeholder="请你输入搜索用户名" v-model="keyword"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" size="default" :disabled="keyword ? false : true"
-                        @click="search">搜索</el-button>
-                </el-form-item>
-            </el-form>
+        <el-card style="height: 10px;margin-bottom:20px;">
         </el-card>
         <el-card>
             <h2 style="text-align:center;">科室信息列表</h2>
-            <el-button type="primary" size="default" @click="addDepartment" style="margin:10px;">添加科室</el-button>
+            <!-- <el-button type="primary" size="default" @click="addDepartment" style="margin:10px;">添加科室</el-button> -->
             <el-table :data="departmentList" v-if="departmentList.length" border>
                 <el-table-column prop="name" label="科室名称" align="center"></el-table-column>
                 <el-table-column prop="id" label="科室编号" align="center"></el-table-column>
                 <el-table-column prop="desc" label="科室描述" align="center"></el-table-column>
                 <el-table-column prop="departmentPrincipal" label="科室负责人" align="center"></el-table-column>
                 <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
-                <el-table-column label="操作" align="center">
-                    <template #default="{ row }">
-                        <el-button type="primary" @click="editDepartment(row)">编辑</el-button>
-                        <el-button type="primary" @click="deleteDepartment(row)">删除</el-button>
-                    </template>
-                </el-table-column>
             </el-table>
             <div v-else>暂无科室信息</div>
-            <el-pagination @size-change="sizeChange" @current-change="getHasTrademark" :pager-count="9"
-                v-model:current-page="pageNo" v-model:page-size="limit" :page-sizes="[3, 5, 7, 9]" :background="true"
-                layout="prev, pager, next, jumper,->,sizes,total" :total="total" style="margin:10px 0;" />
+            <el-pagination :pager-count="9" v-model:current-page="pageNo" v-model:page-size="limit"
+                :page-sizes="[3, 5, 7, 9]" :background="true" layout="prev, pager, next, jumper,->,sizes,total"
+                :total="total" style="margin:10px 0;" />
 
-            <el-dialog :title="dialogTitle" v-model="dialogVisible">
-                <el-form :model="form" label-width="120px" :rules="rules" ref="formRef">
-                    <el-form-item label="科室名称" prop="name">
-                        <el-input v-model="form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="科室编号" prop="id">
-                        <el-input v-model="form.id"></el-input>
-                    </el-form-item>
-                    <el-form-item label="科室描述" prop="desc">
-                        <el-input v-model="form.desc"></el-input>
-                    </el-form-item>
-                    <el-form-item label="科室负责人" prop="departmentPrincipal">
-                        <el-input v-model="form.departmentPrincipal"></el-input>
-                    </el-form-item>
-                    <el-form-item label="联系方式" prop="contact">
-                        <el-input v-model="form.contact"></el-input>
-                    </el-form-item>
-                </el-form>
-                <template #footer>
-                    <el-button @click="dialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="saveDepartment">保存</el-button>
-                </template>
-            </el-dialog>
         </el-card>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick, onMounted } from 'vue';
-import { ElMessageBox } from 'element-plus'
+import { ref, reactive, nextTick, onMounted, computed } from 'vue';
 import { reqgetDepartmentService } from '../../../../api/backstage/index'
 onMounted(async () => {
     const res = await reqgetDepartmentService()
@@ -80,31 +41,29 @@ const form = reactive({
     departmentPrincipal: '',
     contact: ''
 });
-const pageSize = 10; // 每页显示的记录数
-const total = ref(0); // 总记录数
-const currentPage = ref(1); // 当前页码
-const limit = ref(10)
-const departmentList = ref([]); // 科室信息列表
+const pageSize: any = 10; // 每页显示的记录数
+const total: any = ref(0); // 总记录数
+const currentPage: any = ref(1); // 当前页码
+const limit: any = ref(10)
+const departmentList: any = ref([]); // 科室信息列表
+const pageNo: any = ref(1)
 
 const departments = ref([
-    { id: 1, name: '科室 A' },
-    { id: 2, name: '科室 B' },
-    { id: 3, name: '科室 C' }
+    // { id: 1, name: '科室 A' },
+    // { id: 2, name: '科室 B' },
+    // { id: 3, name: '科室 C' }
 ]);
-const search = () => {
-    //搜索请求
-    currentPage.value = 1; // 搜索时重置当前页码
-    fetchDepartmentList();
-    keyword.value = ""
-}
+const search = computed(() => {
+    if (!keyword.value) {
+        return departments.value;
+    }
+    return departments.value.filter((department) =>
+        department.name.toLowerCase().includes(keyword.value)
+    );
+});
 
 const fetchDepartmentList = () => {
-    // 模拟根据搜索条件获取科室信息列表的请求
-    // 这里可以替换成实际的接口请求
     departmentList.value = [
-        { name: '科室 A', number: '001', description: '这是科室 A 的描述', manager: '负责人 A', contact: '1234567890' },
-        { name: '科室 B', number: '002', description: '这是科室 B 的描述', manager: '负责人 B', contact: '0987654321' },
-        { name: '科室 C', number: '003', description: '这是科室 C 的描述', manager: '负责人 C', contact: '9876543210' }
     ];
 
     total.value = departmentList.value.length; // 模拟获取总记录数
@@ -114,95 +73,6 @@ const fetchDepartmentList = () => {
     const endIndex = startIndex + pageSize;
     departmentList.value = departmentList.value.slice(startIndex, endIndex);
 }
-
-
-let dialogVisible = ref(false);
-let dialogTitle = ref('');
-let currentDepartment = null;
-const rules = {
-    name: [
-        { required: true, message: '请输入科室名称', trigger: 'blur' },
-    ],
-    number: [
-        { required: true, message: '请输入科室编号', trigger: 'blur' },
-    ],
-    description: [
-        { required: true, message: '请输入科室描述', trigger: 'blur' },
-    ],
-    manager: [
-        { required: true, message: '请输入科室负责人', trigger: 'blur' },
-    ],
-    contact: [
-        { required: true, message: '请输入联系方式', trigger: 'blur' },
-    ],
-}
-const addDepartment = () => {
-    dialogVisible.value = true;
-    dialogTitle.value = '新增科室';
-    Object.assign(form, {
-        name: '',
-        id: '',
-        desc: '',
-        departmentPrincipal: '',
-        contact: ''
-    })
-    nextTick(() => {
-        formRef.value.clearValidate('name');
-        formRef.value.clearValidate('id');
-        formRef.value.clearValidate('desc');
-        formRef.value.clearValidate('departmentPrincipal');
-        formRef.value.clearValidate('contact');
-    });
-}
-
-const editDepartment = (row) => {
-    dialogVisible.value = true;
-    dialogTitle.value = '编辑科室';
-    Object.assign(form, row);
-    nextTick(() => {
-        formRef.value.clearValidate('name');
-        formRef.value.clearValidate('id');
-        formRef.value.clearValidate('desc');
-        formRef.value.clearValidate('departmentPrincipal');
-        formRef.value.clearValidate('contact');
-    });
-}
-
-const saveDepartment = async () => {
-    await formRef.value.validate()
-    if (currentDepartment) {
-        // 编辑科室
-        currentDepartment.name = form.name;
-        currentDepartment.id = form.id;
-        currentDepartment.desc = form.desc;
-        currentDepartment.departmentPrincipal = form.departmentPrincipal;
-        currentDepartment.contact = form.contact;
-    } else {
-        // 新增科室
-        const newDepartment = {
-            name: form.name,
-            id: form.id,
-            desc: form.desc,
-            departmentPrincipal: form.departmentPrincipal,
-            contact: form.contact
-        };
-        departmentList.value.push(newDepartment);
-        total.value = departmentList.value.length;
-    }
-    dialogVisible.value = false;
-    resetForm();
-}
-
-const deleteDepartment = (department) => {
-    ElMessageBox.confirm('确定删除该科室？', '提示', { type: 'warning' })
-        .then(() => {
-            const index = departmentList.value.indexOf(department);
-            departmentList.value.splice(index, 1);
-            total.value = departmentList.value.length;
-        })
-        .catch(() => { });
-}
-
 fetchDepartmentList(); // 初始化
 </script>
 

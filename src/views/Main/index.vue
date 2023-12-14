@@ -3,7 +3,7 @@
         <h2>医信网系统</h2>
         <div class="context">
             <img src="../../assets//images/avatar.jpg" alt="">
-            <span v-if="isAdmin" title="记得完善个人信息">13525164584</span>
+            <span v-if="isAdmin" title="记得完善个人信息">{{ username }}</span>
             <span v-else>jieye</span>
             <span><el-button @click="logout()">退出登录</el-button></span>
         </div>
@@ -19,6 +19,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 let $router = useRouter()
 const isAdmin = ref(true)
+const username = ref(localStorage.getItem("username"))
 const logout = () => {
     localStorage.removeItem("cookie")
     localStorage.removeItem("userId")

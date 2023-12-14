@@ -39,12 +39,12 @@
                         </el-icon>
                         <router-link to="/appointment_management">预约管理</router-link>
                     </el-menu-item>
-                    <el-menu-item>
+                    <!-- <el-menu-item>
                         <el-icon>
                             <Promotion />
                         </el-icon>
                         <router-link to="/department_statistics">科室统计</router-link>
-                    </el-menu-item>
+                    </el-menu-item> -->
                 </el-sub-menu>
                 <!-- 人员管理 -->
                 <el-sub-menu index="2">
@@ -106,14 +106,6 @@
                         <router-link to="/sales_statistics">销售统计</router-link>
                     </el-menu-item>
                 </el-sub-menu>
-                <!-- 财务管理 -->
-                <!-- <el-menu-item>
-                    <el-icon>
-                        <Shop />
-                    </el-icon>
-                    <router-link to="/financial_management">财务统计</router-link>
-                </el-menu-item> -->
-                <!-- 系统管理 -->
                 <el-sub-menu index="5">
                     <template #title>
                         <el-icon>
@@ -126,7 +118,7 @@
                             <LocationFilled />
                         </el-icon>
                         <span>
-                            <a href="https://github.com/un-pany/v3-admin-vite" target="_blank">Github地址</a>
+                            <a href="https://github.com/jieye12/HIS" target="_blank">Github地址</a>
                         </span>
                     </el-menu-item>
                     <el-menu-item>
@@ -134,7 +126,7 @@
                             <LocationFilled />
                         </el-icon>
                         <span>
-                            <a href="https://github.com/un-pany/v3-admin-vite" target="_blank">Gitee地址</a>
+                            <a href="https://github.com/jieye12/HIS" target="_blank">Gitee地址</a>
                         </span>
                     </el-menu-item>
                     <el-menu-item>

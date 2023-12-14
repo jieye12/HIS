@@ -26,6 +26,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
 import { reqLogin } from '../../api/user/index'
+import { ElNotification } from 'element-plus';
 let $router = useRouter();
 const form = ref(null);
 
@@ -52,7 +53,7 @@ const submitForm = () => {
             const res = await reqLogin(loginForm.value)
             console.log(res);
             if (res.code === '0') {
-                alert('登录成功！');
+                // alert('登录成功！');
                 window.localStorage.setItem("userId", res.data.userId)
                 window.localStorage.setItem("username", res.data.username)
                 window.localStorage.setItem("realName", res.data.realName)
@@ -60,9 +61,17 @@ const submitForm = () => {
                 console.log(window.localStorage.getItem("userId"));
 
                 $router.push("/main")
+                ElNotification({
+                    type: 'success',
+                    message: '欢迎',
+                    title: `HI,${'早上'}好`
+                });
             }
             else {
-                alert("登录失败")
+                ElNotification({
+                    type: 'error',
+                    message: "登录失败"
+                })
             }
         }
     });

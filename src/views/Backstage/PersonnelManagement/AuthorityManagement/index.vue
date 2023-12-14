@@ -24,8 +24,8 @@
                     <template #default="{ row }">
                         <div>用户权限： <el-switch v-model="row.authority[0]" /></div>
                         <div>医生权限： <el-switch v-model="row.authority[1]" /></div>
-                        <div> 管理员权限：<el-switch v-model="row.authority[2]" /></div>
-                        <div> 超级管理员权限<el-switch v-model="row.authority[3]" /></div>
+                        <!-- <div> 管理员权限：<el-switch v-model="row.authority[2]" /></div> -->
+                        <!-- <div> 超级管理员权限<el-switch v-model="row.authority[3]" /></div> -->
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
