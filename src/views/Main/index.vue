@@ -20,6 +20,9 @@ import { useRouter } from 'vue-router'
 let $router = useRouter()
 const isAdmin = ref(true)
 const logout = () => {
+    localStorage.removeItem("cookie")
+    localStorage.removeItem("userId")
+    localStorage.removeItem("username")
     $router.push("/")
 }
 </script>

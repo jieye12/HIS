@@ -5,7 +5,12 @@ import { ElMessage } from "element-plus"
 // import useUserStore from '@/store/modules/user'
 let request = axios.create({
     baseURL: '',
-    timeout: 5000
+    timeout: 5000,
+    headers: {
+        "username": localStorage.getItem("username"),
+        "userId": localStorage.getItem("userId"),
+        "token": localStorage.getItem("cookie")
+    }
 })
 request.interceptors.request.use((config) => {
     // let useStore = useUserStore()

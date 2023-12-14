@@ -54,7 +54,9 @@ const submitForm = () => {
             if (res.code === '0') {
                 alert('登录成功！');
                 window.localStorage.setItem("userId", res.data.userId)
+                window.localStorage.setItem("username", res.data.username)
                 window.localStorage.setItem("realName", res.data.realName)
+                window.localStorage.setItem("cookie", res.data.accessToken)
                 console.log(window.localStorage.getItem("userId"));
 
                 $router.push("/main")
